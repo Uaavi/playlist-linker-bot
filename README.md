@@ -19,7 +19,6 @@ cd playlist-linker-bot
 
 
 2. Створи .env файл на основі .env.example:
-
 3. Встанови залежності: 
 pip install -r requirements.txt
 
