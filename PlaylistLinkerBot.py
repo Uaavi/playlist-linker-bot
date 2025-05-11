@@ -28,7 +28,7 @@ def get_tracks(playlist_url):
     while results['next']:
         results = sp.next(results)
         tracks.extend(results['items'])
-    return [f"{i+1}. {t['track']['external_urls']['spotify']}" for i, t in enumerate(tracks)]
+    return [f"{t['track']['external_urls']['spotify']}" for t in tracks]  # Відкидаємо нумерацію тут
 
 # Обробка повідомлень
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,13 +37,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⏳ Обробляю плейлист...")
         try:
             links = get_tracks(text)
-            for i, link in enumerate(links, start=1):
-                await update.message.reply_text(f"{i}. {link}")
+            reply = "\n".join([f"{i+1}. {link}" for i, link in enumerate(links, start=1)])
+            
+            # Розділяємо на частини по 4000 символів
+            for i in range(0, len(reply), 4000):
+                await update.message.reply_text(reply[i:i+4000])
         except Exception as e:
             await update.message.reply_text(f"❌ Помилка: {e}")
     else:
         await update.message.reply_text("Надішли посилання на плейлист Spotify 🎧")
-
 
 
 # Запуск бота
