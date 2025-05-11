@@ -1,0 +1,22 @@
+# Ігноруємо службові файли
+.vscode/
+__pycache__/
+.env
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+# Ігнорування середовищ
+.env
+
+# Ігнорування VS Code
+.vscode/
+
+# Кеші
+__pycache__/
+*.pyc
+
+# Системні файли
+.DS_Store
+Thumbs.db
