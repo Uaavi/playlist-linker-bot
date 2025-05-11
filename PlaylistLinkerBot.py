@@ -1,4 +1,5 @@
 import os
+import asyncio
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
@@ -28,7 +29,7 @@ def get_tracks(playlist_url):
     while results['next']:
         results = sp.next(results)
         tracks.extend(results['items'])
-    return [f"{t['track']['external_urls']['spotify']}" for t in tracks]  # Відкидаємо нумерацію тут
+    return [t['track']['external_urls']['spotify'] for t in tracks]  # ❗️Без нумерації тут
 
 # Обробка повідомлень
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,11 +38,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⏳ Обробляю плейлист...")
         try:
             links = get_tracks(text)
-            reply = "\n".join([f"{i+1}. {link}" for i, link in enumerate(links, start=1)])
-            
-            # Розділяємо на частини по 4000 символів
-            for i in range(0, len(reply), 4000):
-                await update.message.reply_text(reply[i:i+4000])
+            for i, link in enumerate(links, start=1):
+                await update.message.reply_text(f"{i}. {link}")
+                await asyncio.sleep(0.3)  # затримка, щоб уникнути таймаутів
         except Exception as e:
             await update.message.reply_text(f"❌ Помилка: {e}")
     else:
