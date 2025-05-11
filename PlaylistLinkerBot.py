@@ -37,14 +37,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⏳ Обробляю плейлист...")
         try:
             links = get_tracks(text)
-            reply = "\n".join(links)
-            # Надсилаємо порціями, бо Telegram має ліміт
-            for i in range(0, len(reply), 4000):
-                await update.message.reply_text(reply[i:i+4000])
+            for i, link in enumerate(links, start=1):
+                await update.message.reply_text(f"{i}. {link}")
         except Exception as e:
             await update.message.reply_text(f"❌ Помилка: {e}")
     else:
         await update.message.reply_text("Надішли посилання на плейлист Spotify 🎧")
+
 
 # Запуск бота
 app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
