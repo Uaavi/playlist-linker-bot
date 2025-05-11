@@ -1,0 +1,4 @@
+python-telegram-bot==22.0
+spotipy==2.25.1
+python-dotenv==1.1.0
+
